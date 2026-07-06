@@ -16,6 +16,11 @@ class Finding(BaseModel):
     evidence: str = Field(..., description="The supporting text/quote/explanation from the source")
     source_id: str = Field(..., description="References an id in the sources list below")
     confidence: float = Field(..., ge=0.0, le=1.0, description="Researcher's own confidence in this claim, 0-1")
+    limitations: str = Field(
+        default="", description="Why this SPECIFIC claim needs caution even though evidence exists "
+                                 "(e.g. outdated source, vendor bias, small sample, contested finding). "
+                                 "Different from open_questions: this claim IS supported, but imperfectly."
+    )
 
 
 class Source(BaseModel):
