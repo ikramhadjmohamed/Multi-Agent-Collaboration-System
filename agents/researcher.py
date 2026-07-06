@@ -35,8 +35,11 @@ Search results:
 
 Rules:
 - Only use facts found in the search results above. Do NOT add anything from your own knowledge.
+- Skip snippets that only contain titles, headings, questions, or teasers. Only create findings from concrete factual evidence — if a snippet has no real content, do not turn it into a finding.
+- Do not create two separate findings from the same sentence of evidence. If one sentence supports multiple angles, pick the strongest single claim.
 - If the search results don't clearly cover some aspect of the question, list it in "open_questions" instead of guessing.
 - Every finding's "source_id" MUST be one of the ids shown above (s1, s2, ...) exactly as written.
+- For each finding, add "limitations": a short note whenever the source is opinion-based, marketing/vendor content, anecdotal, narrowly scoped, or otherwise weak/biased. If the source is solid (e.g. established research, reputable technical documentation) and you see no real caveat, use an empty string "".
 
 Return ONLY valid JSON (no markdown fences, no preamble) matching exactly this structure:
 {{
