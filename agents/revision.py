@@ -7,7 +7,7 @@ layer" between them.
 Also handles cleanup of approved drafts: stripping any claim the Critic marked
 unsupported/contradicted, even if it was tolerated as a minor issue.
 """
-
+import re
 from schemas.critic_schema import CriticDecision, VerdictLabel
 
 
@@ -50,8 +50,12 @@ def clean_approved_draft(draft_text: str, decision: CriticDecision) -> tuple[str
 
     for v in decision.raw.verdicts:
         if v.verdict in STRIP_VERDICTS and v.claim in cleaned:
-            cleaned = cleaned.replace(v.claim, "").strip()
-            removed.append(v.claim)
+            # Match the claim text PLUS any citation tags and trailing
+            # punctuation right after it (e.g. "claim text [f1][f2]." )
+            pattern = re.escape(v.claim) + r"(\s*\[f\d+\])*\.?"
+            cleaned, n = re.subn(pattern, "", cleaned, count=1)
+            if n:
+                removed.append(v.claim)
 
     cleaned = " ".join(cleaned.split())
     cleaned = cleaned.replace(" .", ".").replace("..", ".")
