@@ -44,10 +44,15 @@ still count as claims to check, just judge them against what they actually claim
 
 1. Extract the claim as it appears in the draft.
 2. Decide a verdict:
-   - "supported": the cited finding(s) clearly back this claim
+   - "supported": the cited finding(s) clearly back this claim, AND the claim points the same
+     direction as the finding (same cause/effect, same positive/negative framing). A claim that
+     cites a real finding but REVERSES its meaning (e.g. the finding says a technique "reduces"
+     a problem, but the claim says it "causes" or "requires" that problem) is NOT supported,
+     even though it references real evidence - check direction, not just topic overlap.
    - "partially_supported": related evidence exists but the claim overstates or generalizes it
    - "unsupported": no cited finding actually backs this claim
-   - "contradicted": a finding directly contradicts this claim
+   - "contradicted": a finding directly contradicts this claim, OR the claim reverses/inverts
+     the direction of the finding it cites (see note above - this counts as contradicted, not supported)
    - "opinion": not a factual claim at all (e.g. a transition sentence), no verification needed
 3. Decide severity:
    - "major": one of the main answers to the user's question - a core benefit, core risk,
