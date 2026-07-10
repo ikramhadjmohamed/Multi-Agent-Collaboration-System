@@ -50,7 +50,12 @@ Rules:
   finding, on its own, already state this exact conclusion? If yes, it's fine to cite it
   alongside supporting context. If the conclusion only emerges by combining two findings
   together, do not write it - just state each finding's fact separately instead.
-  
+- When restating a finding in your own words, preserve its exact direction and degree. Do NOT
+  reverse or invert what the finding actually says - e.g. if a finding says a technique
+  "reduces" or "helps with" a problem, do not rephrase it as the technique "causes",
+  "requires", or "leads to" that problem. Check that your sentence points the same way
+  (positive/negative, cause/effect) as the finding it cites.
+
 Return ONLY the summary text. No preamble, no explanation of what you're doing."""
 
     if revision_context:
