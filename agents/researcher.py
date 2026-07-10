@@ -40,6 +40,10 @@ Rules:
 - If the search results don't clearly cover some aspect of the question, list it in "open_questions" instead of guessing.
 - Every finding's "source_id" MUST be one of the ids shown above (s1, s2, ...) exactly as written.
 - For each finding, add "limitations": a short note whenever the source is opinion-based, marketing/vendor content, anecdotal, narrowly scoped, or otherwise weak/biased. If the source is solid (e.g. established research, reputable technical documentation) and you see no real caveat, use an empty string "".
+- Evidence must be understandable on its own, without needing to look at surrounding text. Do NOT
+  return a fragment with an unclear reference like "it", "this", "they", "these", or "the method"
+  unless the evidence snippet ALSO includes the noun/context it refers to. Prefer a complete
+  sentence or a short passage over an isolated clause.
 
 Return ONLY valid JSON (no markdown fences, no preamble) matching exactly this structure:
 {{
@@ -87,6 +91,38 @@ def _strip_code_fences(text: str) -> str:
             stripped = stripped.rstrip()[:-3]
     return stripped.strip()
 
+VAGUE_STARTERS = {"it", "this", "they", "these", "that", "those"}
+MIN_EVIDENCE_WORDS = 8
+
+
+def _has_weak_evidence(evidence: str) -> bool:
+    """Flags evidence that's too short to verify on its own, or opens with
+    a pronoun/vague reference with no noun in the same snippet to anchor it."""
+    words = evidence.strip().split()
+    if len(words) < MIN_EVIDENCE_WORDS:
+        return True
+    first_word = words[0].lower().strip(".,;:\"'")
+    return first_word in VAGUE_STARTERS
+
+
+def _filter_weak_evidence(output: ResearchOutput) -> ResearchOutput:
+    """Drops findings with weak evidence rather than failing the whole
+    response - one bad finding out of five shouldn't discard four good ones."""
+    kept, dropped = [], []
+    for f in output.findings:
+        if _has_weak_evidence(f.evidence):
+            dropped.append(f)
+        else:
+            kept.append(f)
+
+    if dropped:
+        print(f"  [researcher] Dropped {len(dropped)} finding(s) with weak/vague evidence:")
+        for f in dropped:
+            print(f"      [{f.id}] evidence: \"{f.evidence}\"")
+
+    output.findings = kept
+    return output
+
 def research(question: str, api_key: str) -> ResearchOutput:
     client = Groq(api_key=api_key)
     search_results = search_web(question)
@@ -115,6 +151,7 @@ def research(question: str, api_key: str) -> ResearchOutput:
             data = json.loads(_strip_code_fences(raw_text))
             output = ResearchOutput.model_validate(data)
             _validate_no_fabricated_sources(output)
+            output = _filter_weak_evidence(output)
             return output
         except (json.JSONDecodeError, ValidationError, ValueError) as e:
             print(f"  [researcher] WARNING: invalid response on attempt {attempt + 1}: {e}")
