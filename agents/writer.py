@@ -1,3 +1,17 @@
+"""
+Writer agent.
+
+Responsibility: turn the Researcher's structured findings into a readable
+summary, citing [f_id] after every factual claim. Never adds facts from
+its own training knowledge - only rephrases/organizes what the Researcher
+already verified.
+
+Citing by finding_id (not source_id) is a deliberate choice: one source
+can back multiple distinct findings, so citing the finding gives the
+Critic (Phase 4) an exact claim+evidence pair to check against, with no
+ambiguity about which of a source's findings a sentence refers to.
+"""
+
 from groq import Groq
 
 from schemas.research_schema import ResearchOutput

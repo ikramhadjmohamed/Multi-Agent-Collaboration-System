@@ -1,3 +1,10 @@
+"""
+Wraps a Writer draft with metadata, so it can be saved/loaded like the
+Researcher's output. The draft text itself is free-form (not structured
+JSON from the LLM), but WE still want structure around it for storage:
+which revision number is this, what question/research does it belong to.
+"""
+
 from pydantic import BaseModel, Field
 
 

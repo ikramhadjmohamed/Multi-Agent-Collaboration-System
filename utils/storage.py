@@ -1,3 +1,12 @@
+"""
+Save/load helpers for pipeline outputs.
+
+Why this exists as its own module rather than inline in researcher.py:
+the Writer agent will need to LOAD a ResearchOutput back (not just the
+Researcher saving it), and later you'll likely save Writer drafts and
+Critic reports too. Keeping save/load generic and in one place avoids
+copy-pasting file-handling code into every agent.
+"""
 import json
 from datetime import datetime
 from pathlib import Path

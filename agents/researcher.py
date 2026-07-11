@@ -1,3 +1,15 @@
+"""
+Researcher agent.
+
+Responsibility: given a user question, search the web for real sources,
+then ask the LLM to extract findings STRICTLY from those search results
+(never from its own training knowledge).
+
+This is the only agent in the whole pipeline allowed to introduce new
+facts into the system. The Writer and Critic never touch the internet —
+they only work with what this agent produces.
+"""
+
 import json
 from ddgs import DDGS
 from groq import Groq

@@ -1,3 +1,12 @@
+"""
+Schema for the Researcher agent's output.
+
+Why Pydantic: it validates the LLM's JSON response against this structure.
+If a field is missing or the wrong type, .model_validate_json() raises a
+ValidationError immediately — that's our signal to retry the researcher
+call with a correction prompt, instead of passing broken data to the Writer.
+"""
+
 from pydantic import BaseModel, Field
 
 
