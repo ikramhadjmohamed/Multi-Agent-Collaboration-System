@@ -2,9 +2,6 @@
 
 A multi-agent AI system where a Researcher gathers evidence, a Writer produces a cited
 summary, and a Critic verifies every claim before the final answer is returned.
-A Researcher → Writer → Critic pipeline that answers a question about an AI/tech topic,
-where the Critic verifies every claim in the Writer's draft against real search evidence
-and sends it back for revision if claims aren't properly supported.
 
 ## Why this task
 
