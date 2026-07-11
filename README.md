@@ -1,5 +1,7 @@
 # Multi-Agent Fact-Checked Research Pipeline
 
+A multi-agent AI system where a Researcher gathers evidence, a Writer produces a cited
+summary, and a Critic verifies every claim before the final answer is returned.
 A Researcher → Writer → Critic pipeline that answers a question about an AI/tech topic,
 where the Critic verifies every claim in the Writer's draft against real search evidence
 and sends it back for revision if claims aren't properly supported.
@@ -112,10 +114,34 @@ python -m scripts.check_writer data\research_<timestamp>.json
 python -m scripts.check_critic data\research_<timestamp>.json data\draft_<timestamp>.json
 python -m scripts.check_direction_reversal
 ```
+## Project structure
+
+```
+.
+├── agents/          Researcher, Writer, Critic - each makes LLM calls
+├── schemas/         Pydantic data shapes + decision_rules.py (the one non-LLM decision)
+├── utils/           storage.py (save/load), metrics.py (pure calculations)
+├── scripts/         manual one-off checks (cost API calls, for debugging one stage)
+├── tests/           deterministic automated tests (no API calls)
+├── data/            saved JSON outputs per run (gitignored except .gitkeep)
+├── main.py          orchestrator - the actual pipeline loop
+├── requirements.txt
+└── README.md
+```
+
 ## Demo
 
-See [`demo_output.txt`](./demo_output.txt) for a full run of the pipeline end-to-end,
-including one Critic-triggered revision round.
+A complete end-to-end execution of the system is included in
+[`demo_output.txt`](./demo_output.txt).
+
+The demo contains:
+- User question
+- Researcher findings
+- Writer first draft
+- Critic verdicts
+- Revision loop
+- Final approved draft
+- Evaluation metrics
 
 ## Tools, models, frameworks
 
@@ -124,7 +150,7 @@ including one Critic-triggered revision round.
 - **Search**: `ddgs` (DuckDuckGo), free, no API key
 - **Validation**: Pydantic v2 for all structured agent outputs
 - **Storage**: JSON files in `data/`, via generic `save_json`/`load_json` helpers
-- No orchestration framework (LangGraph/CrewAI/AutoGen) - built the loop by hand with plain
+- No orchestration framework (LangGraph/CrewAI/AutoGen) - implemented the orchestration manually with plain
   function calls, per the challenge's suggested approach of understanding the flow manually
   before reaching for a framework
 
